@@ -12,7 +12,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendResetLink(String to, String token, String fullName) {
-        String link = "http://localhost:4200/reset-password?token=" + token;
+        String link = "https://clothify-e-commerce.onrender.com/reset-password?token=" + token;
         String body = "Hi " + fullName + ",\n\n"
                 + "Click the link below to reset your password:\n"
                 + link + "\n\n"
