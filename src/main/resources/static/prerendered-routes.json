@@ -1,0 +1,25 @@
+{
+  "routes": [
+    "/",
+    "/account",
+    "/account/settings",
+    "/address/add",
+    "/admin/add-admin",
+    "/admin/add-product",
+    "/admin/admin-settings",
+    "/admin/dashboard",
+    "/admin/view-orders",
+    "/admin/view-products",
+    "/admin/view-users",
+    "/cart",
+    "/checkout",
+    "/forgot-password",
+    "/my-orders",
+    "/payment/card",
+    "/payment/gcash",
+    "/register",
+    "/reset-password",
+    "/shop",
+    "/thank-you"
+  ]
+}
