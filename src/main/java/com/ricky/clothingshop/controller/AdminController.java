@@ -37,7 +37,7 @@ public class AdminController {
         existing.setSize(newProduct.getSize());
         existing.setPrice(newProduct.getPrice());
         existing.setStock(newProduct.getStock());
-        existing.setImageUrl(newProduct.getImageUrl());
+        existing.setImageData(newProduct.getImageData());
         existing.setHasDiscount(newProduct.isHasDiscount());
         existing.setDiscountPercentage(newProduct.getDiscountPercentage());
 

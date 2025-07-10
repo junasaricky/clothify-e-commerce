@@ -14,7 +14,6 @@ public class Product {
     private String description;
     private String size;
     private String color;
-    private String imageUrl;
     private double price;
     private int stock;
     private double discountPercentage;
