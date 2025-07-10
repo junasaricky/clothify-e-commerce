@@ -1,23 +1,16 @@
-// package com.ricky.clothingshop.controller;
+package com.ricky.clothingshop.controller;
 
-// import org.springframework.web.bind.annotation.RestController;
-// import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
-// @RestController
-// public class FrontendController {
+@Controller
+public class FrontendController {
 
-//     @GetMapping(value = {
-//         "/", 
-//         "/admin/**", 
-//         "/customer/**", 
-//         "/shop/**", 
-//         "/login", 
-//         "/register", 
-//         "/cart", 
-//         "/checkout", 
-//         "/dashboard"
-//     })
-//     public String forward() {
-//         return "forward:/index.html";
-//     }
-// }
+    @GetMapping(value = {
+        "/", 
+        "/{x:^(?!api|images|static|favicon\\.ico).*$}/**"
+    })
+    public String forward() {
+        return "forward:/index.html";
+    }
+}
