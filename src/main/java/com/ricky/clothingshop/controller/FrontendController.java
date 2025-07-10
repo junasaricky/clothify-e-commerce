@@ -10,12 +10,19 @@ public class FrontendController {
         "/", 
         "/login",
         "/register",
-        "/dashboard",
+        "/forgot-password",
+        "/reset-password",
+        "/shop",
         "/shop/**",
-        "/admin/**",
-        "/customer/**",
         "/cart",
-        "/checkout"
+        "/checkout",
+        "/thank-you",
+        "/payment/**",
+        "/my-orders",
+        "/address/**",
+        "/account",
+        "/account/settings",
+        "/admin/**"
     })
     public String forward() {
         return "forward:/index.html";
