@@ -26,5 +26,9 @@ public class Product {
         }
         return price;
     }
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT") 
+    private String imageData;
     
 }
