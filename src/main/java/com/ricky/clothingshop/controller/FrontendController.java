@@ -6,11 +6,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class FrontendController {
 
-    @GetMapping(value = {
+    @GetMapping({
         "/", 
-        "/{x:^(?!api|images|static|favicon\\.ico).*$}/**"
+        "/login",
+        "/register",
+        "/dashboard",
+        "/shop/**",
+        "/admin/**",
+        "/customer/**",
+        "/cart",
+        "/checkout"
     })
     public String forward() {
         return "forward:/index.html";
     }
 }
+
