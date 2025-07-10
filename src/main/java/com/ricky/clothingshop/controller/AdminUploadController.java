@@ -37,7 +37,7 @@ public class AdminUploadController {
         String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         // Save to src/main/resources/static/images
-        Path imagesDir = Paths.get("src/main/resources/static/images");
+        Path imagesDir = Paths.get("clothing-shop/src/main/resources/static/images");
         // ensure dir exists
         Files.createDirectories(imagesDir); 
 
