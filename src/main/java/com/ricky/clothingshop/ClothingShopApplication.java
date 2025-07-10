@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @EnableMethodSecurity
 @SpringBootApplication
-@ComponentScan(basePackages= {"com.ricky.clothingshop.controller"})
+@ComponentScan(basePackages= {"com.ricky.clothingshop.controller",  "com.ricky.clothingshop.service"})
 public class ClothingShopApplication {
 
 	public static void main(String[] args) {
