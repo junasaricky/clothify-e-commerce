@@ -53,10 +53,32 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/", 
                     "/index.html", 
-                    "/register", 
                     "/*.js", 
                     "/*.css", 
-                    "/assets/**"
+                    "/assets/**",
+                    "/register",
+                    "/forgot-password",
+                    "/reset-password",
+                    "/shop",
+                    "/shop/**",
+                    "/cart",
+                    "/checkout",
+                    "/thank-you",
+                    "/payment/**",
+                    "/my-orders",
+                    "/address/**",
+                    "/account",
+                    "/account/**",
+
+                    // Admin routes
+                    "/admin/dashboard",
+                    "/admin/add-product",
+                    "/admin/view-products",
+                    "/admin/edit-product/**",
+                    "/admin/view-orders",
+                    "/admin/view-users",
+                    "/admin/add-admin",
+                    "/admin/admin-settings"
                 ).permitAll()
                 .requestMatchers("/api/auth/**", "/api/products/**").permitAll()  // public
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")               // admin-only
