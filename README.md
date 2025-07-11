@@ -4,7 +4,7 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 
 ## Features
 
-### 🛍️ User-Side Features
+###  User-Side Features
 - User registration, login, and logout
 - Profile update and password change
 - Product listing with:
@@ -17,14 +17,14 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
   - Status badges (PENDING, PROCESSING, PACKED, OUT_FOR_DELIVERY, DELIVERED)
   - Address and payment details
 
-### 🛠️ Admin-Side Features
+###  Admin-Side Features
 - Login with admin credentials
 - Product management (CRUD)
 - View all orders placed by customers
 - View user list and account details
 - View sales and user metrics in dashboard format
 
-### 💡 Technical Highlights
+###  Technical Highlights
 - Angular 17 with modular structure and responsive layout
 - Spring Boot REST API with JPA/Hibernate
 - MySQL for persistent storage
@@ -56,7 +56,7 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
    ```bash
    npm install
 
-## 📸 Screenshots
+##  Screenshots
 
 > **Note:** Since the live demo is currently unavailable, here are screenshots showcasing key features of the app:
 
