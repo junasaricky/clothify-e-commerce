@@ -58,20 +58,20 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 
 ## 📸 Screenshots
 
-> Note: Since the live demo is currently unavailable, here are screenshots showing key features of the app:
+> **Note:** Since the live demo is currently unavailable, here are screenshots showcasing key features of the app:
 
 ### Admin Interface
-![Dashboard](./screenshots/Admin Interface/admin-dashboard.png)
-![Products](./screenshots/Admin Interface/product-listing.png)
-![Orders](./screenshots/Admin Interface/orders.png)
-![Settings](./screenshots/Admin Interface/admin-settings.png)
-![Account](./screenshots/Admin Interface/users-listing-account.png)
+![Dashboard](./screenshots/Admin%20Interface/admin-dashboard.png)
+![Products](./screenshots/Admin%20Interface/product-listing.png)
+![Orders](./screenshots/Admin%20Interface/orders.png)
+![Settings](./screenshots/Admin%20Interface/admin-settings.png)
+![Users](./screenshots/Admin%20Interface/users-listing-account.png)
 
-### User Interface 
-![Shop](./screenshots/User Interface/user-shop.png)
-![Cart](./screenshots/User Interface/user-cart.png)
-![Checkout](./screenshots/User Interface/user-checkout-preview.png)
-![ThankYouMessage](./screenshots/User Interface/user-thank_you-message.png)
-![Order](./screenshots/User Interface/user-orders.png)
-![Settings](./screenshots/User Interface/user-settings.png)
-![Account](./screenshots/User Interface/user-account.png)
+### User Interface
+![Shop](./screenshots/User%20Interface/user-shop.png)
+![Cart](./screenshots/User%20Interface/user-cart.png)
+![Checkout](./screenshots/User%20Interface/user-checkout-preview.png)
+![Thank You](./screenshots/User%20Interface/user-thank_you-message.png)
+![Orders](./screenshots/User%20Interface/user-orders.png)
+![Settings](./screenshots/User%20Interface/user-settings.png)
+![Account](./screenshots/User%20Interface/user-account.png)
