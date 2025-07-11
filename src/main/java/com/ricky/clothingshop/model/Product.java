@@ -27,7 +27,7 @@ public class Product {
     }
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT") 
+    @Column(columnDefinition = "BYTEA") 
     private String imageData;
     
 }
