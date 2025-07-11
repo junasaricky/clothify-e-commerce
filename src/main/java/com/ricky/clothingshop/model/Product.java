@@ -27,7 +27,7 @@ public class Product {
     }
 
     @Lob
-    @Column(columnDefinition = "BYTEA") 
+    @Column(columnDefinition = "TEXT") 
     private String imageData;
     
 }
