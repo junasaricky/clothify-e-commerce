@@ -9,9 +9,9 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 - Profile update and password change
 - Product listing with:
   - Discounts
-  - Live search
+  - Real-time search
 - Add to Cart and Buy Now functionality
-- Checkout with simulated GCash/Card payment selection
+- Checkout with GCash or Card (via PayMongo - test mode)
 - Address selection during checkout
 - Order history with:
   - Status badges (PENDING, PROCESSING, PACKED, OUT_FOR_DELIVERY, DELIVERED)
@@ -22,24 +22,26 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 - Product management (CRUD)
 - View all orders placed by customers
 - View user list and account details
-- View sales and user metrics in dashboard format
+- View monthy orders metrics in dashboard format
 
 ###  Technical Highlights
 - Angular 17 with modular structure and responsive layout
 - Spring Boot REST API with JPA/Hibernate
-- MySQL for persistent storage
-- Simulated payment flows (no real third-party integration)
-- Session handling via `sessionStorage` to track cart, order, and payment data
+- Supabase (PostgreSQL) for persistent data storage
+- Payment integration using PayMongo API (test mode only)
+- Checkout session creation with real-time redirect logic
+- Session management using sessionStorage and Spring Security JWT auth
+- Email notifications via SMTP
 - Fully responsive design for desktop and mobile views
 
 ## Technologies Used
 
 - **Frontend**: Angular 17, SCSS, TypeScript
 - **Backend**: Java (Spring Boot), Spring Security
-- **Database**: MySQL
+- **Database**: PostgreSQL (Supabase)
+- **Payment:**: PayMongo (GCash & Card - test mode)
 - **Email**: SMTP (Spring Mail)
 - **Session**: Browser `sessionStorage` and JWT for auth
-- **Payment Flow:** Simulated GCash & Card with backend integration
 - **Hosting:** (Previously on Render — currently unavailable)
 - **Build Tools**: Maven (backend), Angular CLI (frontend)
 
@@ -47,7 +49,7 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 
 ### Backend
 1. Clone the repository and navigate to the backend directory.
-2. Configure your `application.properties` (set MySQL credentials, SMTP credentials).
+2. Configure your `application.properties` (set PostgreSQL Supabase credentials, SMTP credentials).
 3. Run the application using your IDE or `mvn spring-boot:run`.
 
 ### Frontend
@@ -71,6 +73,8 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 ![Shop](./screenshots/User%20Interface/user-shop.png)
 ![Cart](./screenshots/User%20Interface/user-cart.png)
 ![Checkout](./screenshots/User%20Interface/user-checkout-preview.png)
+![Payment-Gcash](./screenshots/User%20Interface/user-gcash-payment.png)
+![Payment-Card](./screenshots/User%20Interface/user-card-payment.png)
 ![Thank You](./screenshots/User%20Interface/user-thank_you-message.png)
 ![Orders](./screenshots/User%20Interface/user-orders.png)
 ![Settings](./screenshots/User%20Interface/user-settings.png)
