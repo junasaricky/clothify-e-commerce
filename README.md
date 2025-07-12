@@ -61,6 +61,7 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 ##  Screenshots
 
 > **Note:** Since the live demo is currently unavailable, here are screenshots showcasing key features of the app:
+> **Payment Integration:** Payment processing (GCash and Card via PayMongo) is implemented, but the actual demo is not available. Screenshots of the app's working flow have been provided below.
 
 ### Admin Interface
 ![Dashboard](./screenshots/Admin%20Interface/admin-dashboard.png)
