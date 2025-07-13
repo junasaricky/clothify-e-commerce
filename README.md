@@ -1,6 +1,6 @@
 # Clothify E-Commerce
 
-Clothify is a full-stack e-commerce web application built with Angular 17 on the frontend and Spring Boot on the backend. It allows users to browse clothing products, manage carts, place orders, and perform account operations. Admins can manage inventory and view customer orders. PayMongo-powered GCash and Card payment flows (test mode), with backend-integrated order processing and session handling.
+Clothify is a full-stack e-commerce web application built with Angular 17 on the frontend and Spring Boot on the backend. It allows users to browse clothing products, manage carts, place orders, and perform account operations. Admins can manage inventory and view customer orders. The application includes PayMongo-powered GCash and Card payment flows (test mode), with backend-integrated order processing and session handling.
 
 ## Features
 
