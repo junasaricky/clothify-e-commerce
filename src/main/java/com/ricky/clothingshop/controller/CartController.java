@@ -12,13 +12,11 @@ import com.ricky.clothingshop.repository.CartRepository;
 import com.ricky.clothingshop.repository.ProductRepository;
 import com.ricky.clothingshop.repository.UserRepository;
 import com.ricky.clothingshop.model.Address;
-import com.ricky.clothingshop.model.Cart;
 import com.ricky.clothingshop.model.User;
 import com.ricky.clothingshop.security.JwtUtil;
 import com.ricky.clothingshop.service.CartService;
 import com.ricky.clothingshop.service.OrderService;
-
-import lombok.RequiredArgsConstructor;
+import com.ricky.clothingshop.service.PaymongoService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
@@ -39,10 +36,29 @@ public class CartController {
     private final OrderService orderService;
     private final AddressRepository addressRepo;
     private final UserRepository userRepo;
-    private final CartRepository cartRepo;
-    private final CartItemRepository cartItemRepo;
     private final JwtUtil jwtUtil;
     private final ProductRepository productRepo;
+    private final PaymongoService paymongoService;
+
+    public CartController(
+        CartService cartService,
+        OrderService orderService,
+        AddressRepository addressRepo,
+        UserRepository userRepo,
+        CartRepository cartRepo,
+        CartItemRepository cartItemRepo,
+        JwtUtil jwtUtil,
+        ProductRepository productRepo,
+        PaymongoService paymongoService
+    ) {
+        this.cartService = cartService;
+        this.orderService = orderService;
+        this.addressRepo = addressRepo;
+        this.userRepo = userRepo;
+        this.jwtUtil = jwtUtil;
+        this.productRepo = productRepo;
+        this.paymongoService = paymongoService;
+    }
 
     @GetMapping("/view")
     public ResponseEntity<List<CartItem>> viewCart(@RequestHeader("Authorization") String authHeader) {
@@ -86,7 +102,7 @@ public class CartController {
 
     // Place order
     @PostMapping("/checkout")
-    public ResponseEntity<Order> checkout(
+    public ResponseEntity<Map<String, Object>> checkout(
         @RequestHeader("Authorization") String authHeader,
         @RequestParam PaymentType paymentType,
         @RequestParam Long addressId,
@@ -94,15 +110,18 @@ public class CartController {
     ) {
         try {
             String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
-            // System.out.println("CHECKOUT executed by: " + username);
 
             if (cartService.getCartItems(username).isEmpty()) {
                 throw new RuntimeException("Cart already empty. Order already placed?");
             }
+
             Address deliveryAddress = addressRepo.findById(addressId)
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
             List<OrderItem> orderItems = new ArrayList<>();
+            double totalAmount = 0.0;
+            int totalQuantity = 0;
+            
             for (Map<String, Object> item : selectedItems) {
                 Long productId = Long.valueOf(item.get("productId").toString());
                 int quantity = Integer.parseInt(item.get("quantity").toString());
@@ -119,17 +138,31 @@ public class CartController {
                     : product.getPrice();
                 orderItem.setPrice(productPrice * quantity);
 
+                totalAmount += productPrice * quantity; // compute total
+
+                totalQuantity += quantity;
                 orderItems.add(orderItem);
             }
 
             Order order = orderService.placeOrder(username, orderItems, paymentType, deliveryAddress);
+
             List<Long> orderedProductIds = orderItems.stream()
                 .map(item -> item.getProduct().getId())
                 .collect(Collectors.toList());
-
             cartService.removeCartItemsByProductIds(username, orderedProductIds);
 
-            return ResponseEntity.ok(order);
+            // Handle PayMongo Redirect
+            String redirectUrl = null;
+            if (paymentType == PaymentType.GCASH || paymentType == PaymentType.CARD) {
+                int amountInCentavos = (int) (totalAmount * 100);
+                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType, totalQuantity);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("order", order);
+            response.put("redirect_url", redirectUrl);
+
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,32 +170,8 @@ public class CartController {
         }
     }
 
-    @DeleteMapping("/remove/{id}")
-    public ResponseEntity<?> removeCartItem(@RequestHeader("Authorization") String authHeader,
-                                            @PathVariable Long id) {
-        try {
-            String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
-            User user = userRepo.findByUsername(username).orElseThrow();
-
-            Cart cart = cartRepo.findByUser(user).orElseThrow();
-            CartItem item = cartItemRepo.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Cart item not found"));
-
-            // Ensure the item belongs to the user's cart
-            if (!item.getCart().getId().equals(cart.getId())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Item does not belong to your cart");
-            }
-
-            cartItemRepo.delete(item);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete cart item");
-        }
-    }
-
     @PostMapping("/buy-now")
-    public ResponseEntity<Order> buyNowCheckout(
+    public ResponseEntity<Map<String, Object>> buyNowCheckout(
         @RequestHeader("Authorization") String authHeader,
         @RequestParam PaymentType paymentType,
         @RequestParam Long addressId,
@@ -170,12 +179,14 @@ public class CartController {
     ) {
         try {
             String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
-            // System.out.println("BUY NOW executed by: " + username);
-
+            
             Address deliveryAddress = addressRepo.findById(addressId)
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
             List<OrderItem> orderItems = new ArrayList<>();
+            double totalAmount = 0.0;
+            int totalQuantity = 0;
+
             for (Map<String, Object> item : selectedItems) {
                 Long productId = Long.valueOf(item.get("productId").toString());
                 int quantity = Integer.parseInt(item.get("quantity").toString());
@@ -190,11 +201,31 @@ public class CartController {
                     ? product.getDiscountedPrice()
                     : product.getPrice();
                 orderItem.setPrice(productPrice * quantity);
+                totalAmount += productPrice * quantity;
+
+                totalQuantity += quantity;
                 orderItems.add(orderItem);
             }
 
             Order order = orderService.placeOrder(username, orderItems, paymentType, deliveryAddress);
-            return ResponseEntity.ok(order);
+
+            List<Long> orderedProductIds = orderItems.stream()
+                .map(item -> item.getProduct().getId())
+                .collect(Collectors.toList());
+            cartService.removeCartItemsByProductIds(username, orderedProductIds);
+
+            String redirectUrl = null;
+            if (paymentType == PaymentType.GCASH || paymentType == PaymentType.CARD) {
+                int amountInCentavos = (int) (totalAmount * 100);
+                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType, totalQuantity);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("order", order);
+            response.put("redirect_url", redirectUrl);
+
+            return ResponseEntity.ok(response);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -206,5 +237,4 @@ public class CartController {
             cartService.updateCartItemQuantity(itemId, quantity);
             return ResponseEntity.ok().build();
         }
-
 }

@@ -47,8 +47,8 @@ public class OrderService {
             order.setPaymentStatus(PaymentStatus.UNPAID);
             order.setStatus(OrderStatus.PENDING);
         } else {
-            order.setPaymentStatus(PaymentStatus.PAID);
-            order.setStatus(OrderStatus.PROCESSING);
+            order.setPaymentStatus(PaymentStatus.UNPAID); 
+            order.setStatus(OrderStatus.PENDING);   
         }
 
         Order savedOrder = orderRepo.save(order);
