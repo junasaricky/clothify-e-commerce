@@ -120,7 +120,6 @@ public class CartController {
 
             List<OrderItem> orderItems = new ArrayList<>();
             double totalAmount = 0.0;
-            int totalQuantity = 0;
             
             for (Map<String, Object> item : selectedItems) {
                 Long productId = Long.valueOf(item.get("productId").toString());
@@ -140,7 +139,6 @@ public class CartController {
 
                 totalAmount += productPrice * quantity; // compute total
 
-                totalQuantity += quantity;
                 orderItems.add(orderItem);
             }
 
@@ -155,7 +153,7 @@ public class CartController {
             String redirectUrl = null;
             if (paymentType == PaymentType.GCASH || paymentType == PaymentType.CARD) {
                 int amountInCentavos = (int) (totalAmount * 100);
-                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType, totalQuantity);
+                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType);
             }
 
             Map<String, Object> response = new HashMap<>();
@@ -185,7 +183,6 @@ public class CartController {
 
             List<OrderItem> orderItems = new ArrayList<>();
             double totalAmount = 0.0;
-            int totalQuantity = 0;
 
             for (Map<String, Object> item : selectedItems) {
                 Long productId = Long.valueOf(item.get("productId").toString());
@@ -203,7 +200,6 @@ public class CartController {
                 orderItem.setPrice(productPrice * quantity);
                 totalAmount += productPrice * quantity;
 
-                totalQuantity += quantity;
                 orderItems.add(orderItem);
             }
 
@@ -217,7 +213,7 @@ public class CartController {
             String redirectUrl = null;
             if (paymentType == PaymentType.GCASH || paymentType == PaymentType.CARD) {
                 int amountInCentavos = (int) (totalAmount * 100);
-                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType, totalQuantity);
+                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType);
             }
 
             Map<String, Object> response = new HashMap<>();

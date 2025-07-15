@@ -18,7 +18,7 @@ public class PaymongoService {
     @Value("${paymongo.secret.key}")
     private String secretKey;
 
-    public String createCheckoutSession(int amount, Long orderId, PaymentType type, int quantity) {
+    public String createCheckoutSession(int amount, Long orderId, PaymentType type) {
         String paymentMethodType = type == PaymentType.GCASH ? "gcash" : "card";
 
         String payload = """
@@ -48,7 +48,7 @@ public class PaymongoService {
                 }
             }
         }
-        """.formatted(amount, orderId, quantity, paymentMethodType, orderId, orderId);
+        """.formatted(amount, orderId, paymentMethodType, orderId, orderId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
