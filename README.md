@@ -27,29 +27,33 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
 ###  Technical Highlights
 - Angular 17 with modular structure and responsive layout
 - Spring Boot REST API with JPA/Hibernate
-- Supabase (PostgreSQL) for persistent data storage
+- PostgreSQL (via Neon) for persistent data storage
 - Payment integration using PayMongo API (test mode only)
 - Checkout session creation with real-time redirect logic
 - Session management using sessionStorage and Spring Security JWT auth
 - Email notifications via SMTP
 - Fully responsive design for desktop and mobile views
+- Deployed on Render (frontend and backend)
 
 ## Technologies Used
 
 - **Frontend**: Angular 17, SCSS, TypeScript
 - **Backend**: Java (Spring Boot), Spring Security
-- **Database**: PostgreSQL (Supabase)
+- **Database**: PostgreSQL (Neon)
 - **Payment**: PayMongo (GCash & Card - test mode)
 - **Email**: SMTP (Spring Mail)
 - **Session**: Browser `sessionStorage` and JWT for auth
-- **Hosting**: (Previously on Render — currently unavailable)
+- **Hosting**: Render (Production-ready deployment)
 - **Build Tools**: Maven (backend), Angular CLI (frontend)
 
 ## Project Setup
 
 ### Backend
 1. Clone the repository and navigate to the backend directory.
-2. Configure your `application.properties` (set PostgreSQL Supabase credentials, SMTP credentials).
+2. Configure your `application.properties`:
+   - Set PostgreSQL Neon credentials (`DB_USERNAME`, `DB_PASSWORD`)
+   - Set SMTP credentials (`MAIL_USERNAME`, `MAIL_PASSWORD`)
+   - Set PayMongo secret key (`paymongo.secret.key`)
 3. Run the application using your IDE or `mvn spring-boot:run`.
 
 ### Frontend
@@ -59,9 +63,6 @@ Clothify is a full-stack e-commerce web application built with Angular 17 on the
    npm install
 
 ##  Screenshots
-
-> **Note:** Since the live demo is currently unavailable, here are screenshots showcasing key features of the app:
-> **Payment Integration:** Payment processing (GCash and Card via PayMongo) is implemented, but the actual demo is not available. Screenshots of the app's working flow have been provided below.
 
 ### Admin Interface
 ![Dashboard](./screenshots/Admin%20Interface/admin-dashboard.png)
