@@ -27,7 +27,7 @@ public class PaymongoService {
             "attributes": {
                 "billing": {
                     "name": "Customer",
-                    "email": "sample@email.com" // optional but recommended
+                    "email": "sample@email.com" 
                 },
                 "send_email_receipt": false,
                 "show_description": true,
