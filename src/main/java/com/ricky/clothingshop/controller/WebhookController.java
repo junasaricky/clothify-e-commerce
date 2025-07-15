@@ -37,15 +37,15 @@ public class WebhookController {
             }
 
             // Sample: description = "orderId:123"
-            if (description != null && description.startsWith("orderId:")) {
-                Long orderId = Long.parseLong(description.replace("orderId:", ""));
+            if (description != null && description.startsWith("Order ID:")) {
+                Long orderId = Long.parseLong(description.replace("Order ID:", "").trim());
                 Order order = orderRepo.findById(orderId).orElse(null);
 
                 if (order != null && order.getPaymentStatus() == PaymentStatus.UNPAID) {
                     order.setPaymentStatus(PaymentStatus.PAID);
                     order.setStatus(OrderStatus.PROCESSING);
                     orderRepo.save(order);
-                    System.out.println("✅ Order #" + orderId + " marked as PAID.");
+                    System.out.println("Order #" + orderId + " marked as PAID.");
                 }
             }
 
