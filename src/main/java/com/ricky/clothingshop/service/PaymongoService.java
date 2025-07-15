@@ -37,7 +37,7 @@ public class PaymongoService {
                     "currency": "PHP",
                     "amount": %d,
                     "name": "Order #%d",
-                    "quantity": %d
+                    "quantity": 1
                     }
                 ],
                 "payment_method_types": ["%s"],
