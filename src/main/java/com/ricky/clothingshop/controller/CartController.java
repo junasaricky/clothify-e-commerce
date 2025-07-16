@@ -150,7 +150,7 @@ public class CartController {
             String redirectUrl = null;
             if (paymentType == PaymentType.PAY_ONLINE) 
             {
-                redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId(), paymentType);
+                redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId());
             }
 
             Map<String, Object> response = new HashMap<>();
@@ -209,7 +209,7 @@ public class CartController {
             if (paymentType == PaymentType.PAY_ONLINE)
             {
 
-                redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId(), paymentType);
+                redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId());
             }
 
             Map<String, Object> response = new HashMap<>();

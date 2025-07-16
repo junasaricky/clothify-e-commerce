@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.ricky.clothingshop.model.PaymentType;
 import com.ricky.clothingshop.model.OrderItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,7 +22,7 @@ public class PaymongoService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public String createCheckoutSession(List<OrderItem> orderItems, Long orderId, PaymentType type) {
+    public String createCheckoutSession(List<OrderItem> orderItems, Long orderId) {
         StringBuilder lineItemsBuilder = new StringBuilder();
         for (int i = 0; i < orderItems.size(); i++) {
             OrderItem item = orderItems.get(i);
@@ -65,7 +64,7 @@ public class PaymongoService {
                 }
             }
         }
-        """.formatted(lineItemsBuilder, orderId, orderId);
+        """.formatted(lineItemsBuilder.toString(), orderId, orderId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
