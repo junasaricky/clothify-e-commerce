@@ -26,47 +26,38 @@ public class WebhookController {
         try {
             System.out.println("📩 Received webhook: " + payload);
 
-            JsonNode json = objectMapper.readTree(payload);
-            String type = json.path("data").path("type").asText();
-            System.out.println("🔍 Webhook type: " + type);
+            JsonNode root = objectMapper.readTree(payload);
+            String eventType = root.path("data").path("attributes").path("type").asText();
 
-            if (!"payment".equals(type)) {
-                System.out.println("⚠️ Not a payment event, ignoring.");
+            System.out.println("🔍 Webhook eventType: " + eventType);
+
+            if (!"payment.paid".equals(eventType)) {
+                System.out.println("⚠️ Not a payment.paid event, ignoring.");
                 return ResponseEntity.ok().build();
             }
 
-            JsonNode attributes = json.path("data").path("attributes");
-            String status = attributes.path("status").asText();
-            String description = attributes.path("description").asText();
+            JsonNode paymentAttributes = root.path("data").path("attributes").path("data").path("attributes");
+            String status = paymentAttributes.path("status").asText();
+            String description = paymentAttributes.path("description").asText();
 
             System.out.println("💰 Payment status: " + status);
             System.out.println("📝 Description: " + description);
 
-            if (!status.equals("paid")) {
-                System.out.println("🕒 Payment not yet paid, ignoring.");
-                return ResponseEntity.ok().build();
+            if (!"paid".equals(status)) {
+                return ResponseEntity.ok().build(); // Not yet paid
             }
 
             if (description != null && description.startsWith("Order ID:")) {
                 Long orderId = Long.parseLong(description.replace("Order ID:", "").trim());
-                System.out.println("📦 Order ID from description: " + orderId);
-
                 Order order = orderRepo.findById(orderId).orElse(null);
 
-                if (order != null) {
-                    System.out.println("📬 Order found: " + order.getId());
-                    if (order.getPaymentStatus() == PaymentStatus.UNPAID) {
-                        order.setPaymentStatus(PaymentStatus.PAID);
-                        order.setStatus(OrderStatus.PROCESSING);
-                        orderRepo.save(order);
+                if (order != null && order.getPaymentStatus() == PaymentStatus.UNPAID) {
+                    order.setPaymentStatus(PaymentStatus.PAID);
+                    order.setStatus(OrderStatus.PROCESSING);
+                    orderRepo.save(order);
 
-                        emailService.sendPaymentConfirmation(order);
-                        System.out.println("✅ Order #" + orderId + " marked as PAID.");
-                    } else {
-                        System.out.println("🔁 Order already marked as paid.");
-                    }
-                } else {
-                    System.out.println("❌ Order not found.");
+                    emailService.sendPaymentConfirmation(order);
+                    System.out.println("✅ Order #" + orderId + " marked as PAID.");
                 }
             }
 
@@ -77,6 +68,5 @@ public class WebhookController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
 }
 
