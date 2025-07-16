@@ -45,13 +45,6 @@ public class PaymongoService {
             }
         }
 
-        String paymentMethodType = switch (type) {
-            case GCASH -> "gcash";
-            case CARD -> "card";
-            case GRAB_PAY -> "grab_pay";
-            default -> throw new IllegalArgumentException("Unsupported payment method: " + type);
-        };
-
         String payload = """
         {
             "data": {
@@ -64,7 +57,7 @@ public class PaymongoService {
                     "show_description": true,
                     "show_line_items": true,
                     "line_items": [%s],
-                    "payment_method_types": ["%s"],
+                    "payment_method_types": ["gcash", "card", "grab_pay"],
                     "description": "Order ID: %d",
                     "reference_number": "%d",
                     "success_url": "https://clothify-e-commerce.onrender.com/thank-you",
@@ -72,7 +65,7 @@ public class PaymongoService {
                 }
             }
         }
-        """.formatted(lineItemsBuilder, paymentMethodType, orderId, orderId);
+        """.formatted(lineItemsBuilder, orderId, orderId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

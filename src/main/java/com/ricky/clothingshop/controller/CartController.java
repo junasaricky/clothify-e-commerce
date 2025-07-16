@@ -148,10 +148,8 @@ public class CartController {
 
             // Handle PayMongo Redirect
             String redirectUrl = null;
-            if (paymentType == PaymentType.GCASH || 
-                paymentType == PaymentType.CARD || 
-                paymentType == PaymentType.GRAB_PAY) {
-
+            if (paymentType == PaymentType.PAY_ONLINE) 
+            {
                 redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId(), paymentType);
             }
 
@@ -208,9 +206,8 @@ public class CartController {
             cartService.removeCartItemsByProductIds(username, orderedProductIds);
 
             String redirectUrl = null;
-            if (paymentType == PaymentType.GCASH || 
-                paymentType == PaymentType.CARD || 
-                paymentType == PaymentType.GRAB_PAY) {
+            if (paymentType == PaymentType.PAY_ONLINE)
+            {
 
                 redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId(), paymentType);
             }
