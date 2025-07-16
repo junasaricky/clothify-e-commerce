@@ -173,6 +173,8 @@ public class CartController {
         @RequestBody List<Map<String, Object>> selectedItems
     ) {
         try {
+            System.out.println("Payment Type: " + paymentType);
+
             String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
             
             Address deliveryAddress = addressRepo.findById(addressId)
