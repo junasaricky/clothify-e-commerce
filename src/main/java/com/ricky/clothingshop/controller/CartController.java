@@ -146,6 +146,14 @@ public class CartController {
 
             Order order = orderService.placeOrder(username, orderItems, paymentType, deliveryAddress);
 
+            if (paymentType == PaymentType.CASH_ON_DELIVERY) {
+                List<Long> orderedProductIds = orderItems.stream()
+                    .map(item -> item.getProduct().getId())
+                    .collect(Collectors.toList());
+
+                cartService.removeCartItemsByProductIds(username, orderedProductIds);
+            }
+
             // Handle PayMongo Redirect
             String redirectUrl = null;
             if (paymentType == PaymentType.PAY_ONLINE) 
@@ -201,6 +209,14 @@ public class CartController {
             }
 
             Order order = orderService.placeOrder(username, orderItems, paymentType, deliveryAddress);
+
+            if (paymentType == PaymentType.CASH_ON_DELIVERY) {
+                List<Long> orderedProductIds = orderItems.stream()
+                    .map(item -> item.getProduct().getId())
+                    .collect(Collectors.toList());
+
+                cartService.removeCartItemsByProductIds(username, orderedProductIds);
+            }
 
             String redirectUrl = null;
             if (paymentType == PaymentType.PAY_ONLINE)
