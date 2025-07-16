@@ -4,11 +4,13 @@ import com.ricky.clothingshop.dto.CartRequest;
 import com.ricky.clothingshop.model.CartItem;
 import com.ricky.clothingshop.model.Order;
 import com.ricky.clothingshop.model.OrderItem;
+import com.ricky.clothingshop.model.PaymentStatus;
 import com.ricky.clothingshop.model.PaymentType;
 import com.ricky.clothingshop.model.Product;
 import com.ricky.clothingshop.repository.AddressRepository;
 import com.ricky.clothingshop.repository.CartItemRepository;
 import com.ricky.clothingshop.repository.CartRepository;
+import com.ricky.clothingshop.repository.OrderRepository;
 import com.ricky.clothingshop.repository.ProductRepository;
 import com.ricky.clothingshop.repository.UserRepository;
 import com.ricky.clothingshop.model.Address;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/cart")
 public class CartController {
 
+    private final OrderRepository orderRepo;
     private final CartService cartService;
     private final OrderService orderService;
     private final AddressRepository addressRepo;
@@ -41,6 +44,7 @@ public class CartController {
     private final PaymongoService paymongoService;
 
     public CartController(
+        OrderRepository orderRepo,
         CartService cartService,
         OrderService orderService,
         AddressRepository addressRepo,
@@ -51,6 +55,7 @@ public class CartController {
         ProductRepository productRepo,
         PaymongoService paymongoService
     ) {
+        this.orderRepo = orderRepo;
         this.cartService = cartService;
         this.orderService = orderService;
         this.addressRepo = addressRepo;
@@ -141,11 +146,6 @@ public class CartController {
 
             Order order = orderService.placeOrder(username, orderItems, paymentType, deliveryAddress);
 
-            List<Long> orderedProductIds = orderItems.stream()
-                .map(item -> item.getProduct().getId())
-                .collect(Collectors.toList());
-            cartService.removeCartItemsByProductIds(username, orderedProductIds);
-
             // Handle PayMongo Redirect
             String redirectUrl = null;
             if (paymentType == PaymentType.PAY_ONLINE) 
@@ -202,11 +202,6 @@ public class CartController {
 
             Order order = orderService.placeOrder(username, orderItems, paymentType, deliveryAddress);
 
-            List<Long> orderedProductIds = orderItems.stream()
-                .map(item -> item.getProduct().getId())
-                .collect(Collectors.toList());
-            cartService.removeCartItemsByProductIds(username, orderedProductIds);
-
             String redirectUrl = null;
             if (paymentType == PaymentType.PAY_ONLINE)
             {
@@ -227,8 +222,38 @@ public class CartController {
     }
 
     @PutMapping("/update-quantity/{itemId}")
-        public ResponseEntity<Void> updateQuantity(@PathVariable Long itemId, @RequestParam int quantity) {
-            cartService.updateCartItemQuantity(itemId, quantity);
-            return ResponseEntity.ok().build();
+    public ResponseEntity<Void> updateQuantity(@PathVariable Long itemId, @RequestParam int quantity) {
+        cartService.updateCartItemQuantity(itemId, quantity);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/payment/success")
+    public ResponseEntity<?> handleSuccessfulPayment(
+        @RequestHeader("Authorization") String authHeader,
+        @RequestParam Long orderId
+    ) {
+        try {
+            String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
+
+            Order order = orderService.getOrderById(orderId);
+            if (!order.getUser().getUsername().equals(username)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            order.setPaymentStatus(PaymentStatus.PAID);
+            orderRepo.save(order);
+
+            List<Long> orderedProductIds = order.getItems().stream()
+                .map(item -> item.getProduct().getId())
+                .collect(Collectors.toList());
+
+            cartService.removeCartItemsByProductIds(username, orderedProductIds);
+
+            return ResponseEntity.ok("Cart items removed after payment success");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error handling payment success");
         }
+    }
 }
