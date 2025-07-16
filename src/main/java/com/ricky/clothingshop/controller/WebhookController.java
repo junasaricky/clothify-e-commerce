@@ -24,24 +24,16 @@ public class WebhookController {
     @PostMapping("/paymongo")
     public ResponseEntity<Void> handlePaymongoWebhook(@RequestBody String payload) {
         try {
-            System.out.println("📩 Received webhook: " + payload);
-
             JsonNode root = objectMapper.readTree(payload);
             String eventType = root.path("data").path("attributes").path("type").asText();
 
-            System.out.println("🔍 Webhook eventType: " + eventType);
-
             if (!"payment.paid".equals(eventType)) {
-                System.out.println("⚠️ Not a payment.paid event, ignoring.");
                 return ResponseEntity.ok().build();
             }
 
             JsonNode paymentAttributes = root.path("data").path("attributes").path("data").path("attributes");
             String status = paymentAttributes.path("status").asText();
             String description = paymentAttributes.path("description").asText();
-
-            System.out.println("💰 Payment status: " + status);
-            System.out.println("📝 Description: " + description);
 
             if (!"paid".equals(status)) {
                 return ResponseEntity.ok().build(); // Not yet paid
@@ -57,13 +49,11 @@ public class WebhookController {
                     orderRepo.save(order);
 
                     emailService.sendPaymentConfirmation(order);
-                    System.out.println("✅ Order #" + orderId + " marked as PAID.");
                 }
             }
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            System.err.println("💥 Webhook processing failed:");
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
