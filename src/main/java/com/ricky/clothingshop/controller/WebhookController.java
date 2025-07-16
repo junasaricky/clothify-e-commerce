@@ -6,6 +6,8 @@ import com.ricky.clothingshop.model.Order;
 import com.ricky.clothingshop.model.PaymentStatus;
 import com.ricky.clothingshop.model.OrderStatus;
 import com.ricky.clothingshop.repository.OrderRepository;
+import com.ricky.clothingshop.service.EmailService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ public class WebhookController {
 
     private final OrderRepository orderRepo;
     private final ObjectMapper objectMapper;
+    private final EmailService emailService;
 
     @PostMapping("/paymongo")
     public ResponseEntity<Void> handlePaymongoWebhook(@RequestBody String payload) {
@@ -56,6 +59,8 @@ public class WebhookController {
                         order.setPaymentStatus(PaymentStatus.PAID);
                         order.setStatus(OrderStatus.PROCESSING);
                         orderRepo.save(order);
+
+                        emailService.sendPaymentConfirmation(order);
                         System.out.println("✅ Order #" + orderId + " marked as PAID.");
                     } else {
                         System.out.println("🔁 Order already marked as paid.");

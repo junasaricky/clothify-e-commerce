@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.SimpleMailMessage;
+import com.ricky.clothingshop.model.Order;
 
 @Service
 public class EmailService {
@@ -24,6 +25,27 @@ public class EmailService {
         message.setSubject("Password Reset Request");
         message.setText(body);
 
+        mailSender.send(message);
+    }
+
+    public void sendPaymentConfirmation(Order order) {
+        String to = order.getUser().getEmail();
+        String subject = "Payment Received for Order #" + order.getId();
+        String body = """
+            Hi %s,
+
+            Thank you for your payment!
+
+            We've received your payment of ₱%.2f for Order #%d.
+            Your order is now being processed.
+
+            – Clothify Team
+            """.formatted(order.getUser().getFullName(), order.getTotal(), order.getId());
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
         mailSender.send(message);
     }
 }

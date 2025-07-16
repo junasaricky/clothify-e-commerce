@@ -119,7 +119,6 @@ public class CartController {
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
             List<OrderItem> orderItems = new ArrayList<>();
-            double totalAmount = 0.0;
             
             for (Map<String, Object> item : selectedItems) {
                 Long productId = Long.valueOf(item.get("productId").toString());
@@ -137,8 +136,6 @@ public class CartController {
                     : product.getPrice();
                 orderItem.setPrice(productPrice * quantity);
 
-                totalAmount += productPrice * quantity; // compute total
-
                 orderItems.add(orderItem);
             }
 
@@ -152,8 +149,8 @@ public class CartController {
             // Handle PayMongo Redirect
             String redirectUrl = null;
             if (paymentType == PaymentType.GCASH || paymentType == PaymentType.CARD) {
-                int amountInCentavos = (int) (totalAmount * 100);
-                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType);
+               
+                redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId(), paymentType);
             }
 
             Map<String, Object> response = new HashMap<>();
@@ -182,7 +179,6 @@ public class CartController {
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
             List<OrderItem> orderItems = new ArrayList<>();
-            double totalAmount = 0.0;
 
             for (Map<String, Object> item : selectedItems) {
                 Long productId = Long.valueOf(item.get("productId").toString());
@@ -198,7 +194,6 @@ public class CartController {
                     ? product.getDiscountedPrice()
                     : product.getPrice();
                 orderItem.setPrice(productPrice * quantity);
-                totalAmount += productPrice * quantity;
 
                 orderItems.add(orderItem);
             }
@@ -212,8 +207,7 @@ public class CartController {
 
             String redirectUrl = null;
             if (paymentType == PaymentType.GCASH || paymentType == PaymentType.CARD) {
-                int amountInCentavos = (int) (totalAmount * 100);
-                redirectUrl = paymongoService.createCheckoutSession(amountInCentavos, order.getId(), paymentType);
+                redirectUrl = paymongoService.createCheckoutSession(orderItems, order.getId(), paymentType);
             }
 
             Map<String, Object> response = new HashMap<>();
