@@ -24,8 +24,6 @@ public class PaymongoService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public String createCheckoutSession(List<OrderItem> orderItems, Long orderId, PaymentType type) {
-        String paymentMethodType = type == PaymentType.GCASH ? "gcash" : "card";
-
         StringBuilder lineItemsBuilder = new StringBuilder();
         for (int i = 0; i < orderItems.size(); i++) {
             OrderItem item = orderItems.get(i);
@@ -61,7 +59,7 @@ public class PaymongoService {
                     "line_items": [
                         %s
                     ],
-                    "payment_method_types": ["%s"],
+                    "payment_method_types": [\"card\", \"gcash\", \"maya\", \"grab_pay\"],
                     "description": "Order ID: %d",
                     "reference_number": "%d",
                     "success_url": "https://clothify-e-commerce.onrender.com/thank-you",
@@ -69,7 +67,7 @@ public class PaymongoService {
                 }
             }
         }
-        """.formatted(lineItemsBuilder, paymentMethodType, orderId, orderId);
+        """.formatted(lineItemsBuilder, orderId, orderId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

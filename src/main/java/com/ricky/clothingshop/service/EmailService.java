@@ -39,7 +39,7 @@ public class EmailService {
             We've received your payment of ₱%.2f for Order #%d.
             Your order is now being processed.
 
-            – Clothify Team
+            – Clothify E-Commerce Team
             """.formatted(order.getUser().getFullName(), order.getTotal(), order.getId());
 
         SimpleMailMessage message = new SimpleMailMessage();
