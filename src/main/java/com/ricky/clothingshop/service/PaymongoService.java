@@ -59,12 +59,12 @@ public class PaymongoService {
                     "payment_method_types": ["gcash", "card", "grab_pay"],
                     "description": "Order ID: %d",
                     "reference_number": "%d",
-                    "success_url": "https://clothify-e-commerce.onrender.com/thank-you",
+                    "success_url": "https://clothify-e-commerce.onrender.com/thank-you?orderId=%d",
                     "cancel_url": "https://clothify-e-commerce.onrender.com/shop"
                 }
             }
         }
-        """.formatted(lineItemsBuilder.toString(), orderId, orderId);
+        """.formatted(lineItemsBuilder.toString(), orderId, orderId, orderId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
