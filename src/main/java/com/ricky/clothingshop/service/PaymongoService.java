@@ -59,7 +59,7 @@ public class PaymongoService {
                     "line_items": [
                         %s
                     ],
-                    "payment_method_types": [\"card\", \"gcash\", \"maya\", \"grab_pay\"],
+                    "payment_method_types": [\"card\", \"gcash\", \"grab_pay\"],
                     "description": "Order ID: %d",
                     "reference_number": "%d",
                     "success_url": "https://clothify-e-commerce.onrender.com/thank-you",
