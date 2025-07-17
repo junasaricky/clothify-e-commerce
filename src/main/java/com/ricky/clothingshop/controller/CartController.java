@@ -265,7 +265,7 @@ public class CartController {
 
             cartService.removeCartItemsByProductIds(username, orderedProductIds);
 
-            return ResponseEntity.ok("Cart items removed after payment success");
+            return ResponseEntity.ok(Map.of("message", "Cart items removed after payment success"));
 
         } catch (Exception e) {
             e.printStackTrace();
