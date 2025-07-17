@@ -249,16 +249,11 @@ public class CartController {
         @RequestParam Long orderId
     ) {
         try {
-            String jwt = authHeader.replace("Bearer ", "");
-            String username = jwtUtil.extractUsername(jwt);
+            String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
 
             Order order = orderService.getOrderById(orderId);
-            if (order == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found.");
-            }
-
-            if (order.getUser() == null || !order.getUser().getUsername().equals(username)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access to order.");
+            if (!order.getUser().getUsername().equals(username)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
             order.setPaymentStatus(PaymentStatus.PAID);
@@ -273,10 +268,8 @@ public class CartController {
             return ResponseEntity.ok("Cart items removed after payment success");
 
         } catch (Exception e) {
-            e.printStackTrace(); // you can also log this
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Error handling payment success: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error handling payment success");
         }
     }
-
 }
