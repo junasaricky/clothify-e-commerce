@@ -83,7 +83,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/api/products/**").permitAll()  // public
                 .requestMatchers("/api/webhook/**").permitAll() 
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")               // admin-only
-                .requestMatchers("/api/cart/**", "/api/orders/**").hasAnyAuthority("ROLE_CUSTOMER") // customer-only
+                .requestMatchers("/api/cart/**", "/api/orders/**").hasRole("CUSTOMER") // customer-only
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/images/**").permitAll() 
                 .anyRequest().authenticated())                                   // rest must login
