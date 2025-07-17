@@ -51,15 +51,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(
-                     "/", 
+                    "/", 
                     "/index.html", 
-                    "/*.js", "/**/*.js",
-                    "/*.css", "/**/*.css",
+                    "/*.js", 
+                    "/*.css", 
                     "/assets/**",
-                    "/*.woff2", "/*.woff", "/*.ttf",
-                    "/*.svg", "/*.png", "/*.jpg", "/*.webp", 
-                    "/*.json",
-                    "/favicon.ico",
                     "/register",
                     "/forgot-password",
                     "/reset-password",
