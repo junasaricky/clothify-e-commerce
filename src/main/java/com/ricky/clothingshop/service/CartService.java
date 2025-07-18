@@ -8,6 +8,7 @@ import com.ricky.clothingshop.repository.CartItemRepository;
 import com.ricky.clothingshop.repository.CartRepository;
 import com.ricky.clothingshop.repository.ProductRepository;
 import com.ricky.clothingshop.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -75,6 +76,7 @@ public class CartService {
         cartRepo.save(cart);
     }
     
+    @Transactional
     public void removeCartItemsByProductIds(String username, List<Long> productIds) {
         User user = userRepo.findByUsername(username).orElseThrow();
         Cart cart = cartRepo.findByUser(user).orElseThrow();
