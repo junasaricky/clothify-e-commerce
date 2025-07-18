@@ -65,7 +65,11 @@ public class OrderService {
 
     @Transactional
     public List<Order> getOrdersByUser(String username) {
-        return orderRepo.findByUserUsername(username);
+        List<Order> orders = orderRepo.findByUserUsername(username);
+
+        orders.forEach(order -> order.getItems().size());
+
+        return orders;
     }
 
     public List<Order> getAllOrders() {
