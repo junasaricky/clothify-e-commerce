@@ -68,8 +68,13 @@ public class CartController {
     @GetMapping("/view")
     public ResponseEntity<List<CartItem>> viewCart(@RequestHeader("Authorization") String authHeader) {
         try {
+            System.out.println("Auth Header: " + authHeader);
             String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
+            System.out.println("Extracted Username: " + username);
+
             List<CartItem> cartItems = cartService.getCartItems(username);
+            System.out.println("Cart items fetched: " + cartItems.size());
+            
             return ResponseEntity.ok(cartItems);
         } catch (Exception e) {
             e.printStackTrace(); 
