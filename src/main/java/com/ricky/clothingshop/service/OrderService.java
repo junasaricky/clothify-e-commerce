@@ -11,6 +11,7 @@ import com.ricky.clothingshop.repository.OrderRepository;
 import com.ricky.clothingshop.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import com.ricky.clothingshop.model.Address;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,7 @@ public class OrderService {
         return savedOrder;
     }
 
-
+    @Transactional
     public List<Order> getOrdersByUser(String username) {
         return orderRepo.findByUserUsername(username);
     }
