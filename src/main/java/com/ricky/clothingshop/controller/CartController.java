@@ -73,6 +73,7 @@ public class CartController {
             return ResponseEntity.ok(cartItems);
         } catch (Exception e) {
             e.printStackTrace(); 
+            System.out.println("Cart View Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
