@@ -93,6 +93,21 @@ public class CartService {
         cartRepo.save(cart);
     }
 
+    @Transactional
+    public void removeCartItemById(String username, Long itemId) {
+        User user = userRepo.findByUsername(username).orElseThrow();
+        Cart cart = cartRepo.findByUser(user).orElseThrow();
+
+        CartItem item = cart.getItems().stream()
+            .filter(i -> i.getId().equals(itemId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        cart.getItems().remove(item);
+        cartItemRepo.delete(item);
+        cartRepo.save(cart);
+    }
+
     public void updateCartItemQuantity(Long itemId, int quantity) {
         Optional<CartItem> optionalItem = cartItemRepo.findById(itemId);
         if (optionalItem.isPresent()) {

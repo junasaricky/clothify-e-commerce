@@ -249,6 +249,22 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/remove/{cartItemId}")
+    public ResponseEntity<?> removeItem(
+        @RequestHeader("Authorization") String authHeader,
+        @PathVariable Long cartItemId
+    ) {
+        try {
+            String username = jwtUtil.extractUsername(authHeader.replace("Bearer ", ""));
+            cartService.removeCartItemById(username, cartItemId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Failed to delete cart item.");
+        }
+    }
+
     @PostMapping("/payment/success")
     public ResponseEntity<?> handleSuccessfulPayment(
         @RequestHeader("Authorization") String authHeader,
