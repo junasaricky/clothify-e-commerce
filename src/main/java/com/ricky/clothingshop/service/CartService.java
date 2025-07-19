@@ -81,6 +81,9 @@ public class CartService {
         User user = userRepo.findByUsername(username).orElseThrow();
         Cart cart = cartRepo.findByUser(user).orElseThrow();
 
+        System.out.println("Cart Items BEFORE delete: " + cart.getItems().size());
+        System.out.println("Deleting items with productIds: " + productIds);
+        
         List<CartItem> itemsToDelete = cart.getItems().stream()
             .filter(item -> productIds.contains(item.getProduct().getId()))
             .collect(Collectors.toList());

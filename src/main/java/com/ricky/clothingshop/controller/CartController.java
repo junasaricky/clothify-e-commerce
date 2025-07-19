@@ -290,6 +290,8 @@ public class CartController {
                 .map(item -> item.getProduct().getId())
                 .collect(Collectors.toList());
 
+            System.out.println("Ordered Product IDs: " + orderedProductIds);
+
             cartService.removeCartItemsByProductIds(username, orderedProductIds);
 
             return ResponseEntity.ok("Cart items removed after payment success");
