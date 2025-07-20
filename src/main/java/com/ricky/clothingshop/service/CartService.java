@@ -80,18 +80,17 @@ public class CartService {
     public void removeCartItemsByProductIds(String username, List<Long> productIds) {
         User user = userRepo.findByUsername(username).orElseThrow();
         Cart cart = cartRepo.findByUser(user).orElseThrow();
-
-        System.out.println("Cart Items BEFORE delete: " + cart.getItems().size());
-        System.out.println("Deleting items with productIds: " + productIds);
         
         List<CartItem> itemsToDelete = cart.getItems().stream()
             .filter(item -> productIds.contains(item.getProduct().getId()))
             .collect(Collectors.toList());
 
-        cartItemRepo.deleteAll(itemsToDelete);
+        System.out.println("Cart Items BEFORE delete: " + cart.getItems().size());
+        System.out.println("Deleting items with productIds: " + productIds);
 
-        // Optional: clear in-memory list of deleted items
-        cart.getItems().removeIf(item -> productIds.contains(item.getProduct().getId()));
+        cart.getItems().removeAll(itemsToDelete);
+
+        System.out.println("Cart Items AFTER delete: " + cart.getItems().size());
 
         cartRepo.save(cart);
     }
