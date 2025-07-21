@@ -22,7 +22,8 @@ public class FrontendController {
         "/address/**",
         "/account",
         "/account/settings",
-        "/admin/**"
+        "/admin/**",
+        "/error" 
     })
     public String forward() {
         return "forward:/index.html";
