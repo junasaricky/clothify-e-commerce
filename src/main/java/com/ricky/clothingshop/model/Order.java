@@ -32,12 +32,11 @@ public class Order {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnoreProperties("order") 
     private List<OrderItem> items;
-
 
     private Date orderDate;
     private double total;
