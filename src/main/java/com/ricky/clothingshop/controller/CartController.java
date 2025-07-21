@@ -19,6 +19,7 @@ import com.ricky.clothingshop.security.JwtUtil;
 import com.ricky.clothingshop.service.CartService;
 import com.ricky.clothingshop.service.OrderService;
 import com.ricky.clothingshop.service.PaymongoService;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -265,6 +266,7 @@ public class CartController {
         }
     }
 
+    @Transactional
     @PostMapping("/payment/success")
         public ResponseEntity<?> handleSuccessfulPayment(
         @RequestHeader("Authorization") String authHeader,
