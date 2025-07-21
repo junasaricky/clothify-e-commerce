@@ -13,6 +13,7 @@
     "/admin/view-users",
     "/cart",
     "/checkout",
+    "/error",
     "/forgot-password",
     "/my-orders",
     "/payment",
